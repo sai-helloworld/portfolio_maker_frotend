@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Portfolio Generator</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border: 1px solid #334155;
+            width: 100%;
+            max-width: 580px;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+        }
+
+        h2 { margin-top: 0; font-size: 1.5rem; }
+        p { color: var(--text-sub); font-size: 0.95rem; }
+
+        .step { display: none; }
+        .step.active { display: block; }
+
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            color: white;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            background-color: var(--accent);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover { background-color: var(--accent-hover); }
+        button:disabled { background-color: #475569; cursor: not-allowed; }
+        button.secondary { background-color: transparent; border: 1px solid #334155; color: var(--text-sub); }
+
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form id="portfolioForm">
+        <!-- Step 1 -->
+        <div class="step active" id="step1">
+            <h2>Personal Identity</h2>
+            <p>Let's start with who you are.</p>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+                <label>Contact Email / Links</label>
+                <input type="text" id="email" placeholder="john@example.com | github.com/johndoe">
+            </div>
+            <div class="btn-group">
+                <div></div>
+                <button type="button" onclick="nextStep(2)">Next &rarr;</button>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="step2">
+            <h2>Skills & Technologies</h2>
+            <p>What languages, frameworks, or tools do you specialize in?</p>
+            <div class="form-group">
+                <label>Technologies (Comma separated)</label>
+                <textarea id="technologies" rows="4" placeholder="Python, JavaScript, React, Django, Docker"></textarea>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="secondary" onclick="prevStep(1)">&larr; Back</button>
+                <button type="button" onclick="nextStep(3)">Next &rarr;</button>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" id="step3">
+            <h2>Projects & Work</h2>
+            <p>Highlight your standout work and accomplishments.</p>
+            <div class="form-group">
+                <label>Key Projects</label>
+                <textarea id="projects" rows="3" placeholder="Project A: E-commerce platform built with Django..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Achievements & Certifications</label>
+                <textarea id="achievements" rows="2" placeholder="Hackathon Winner, AWS Certified"></textarea>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="secondary" onclick="prevStep(2)">&larr; Back</button>
+                <button type="button" onclick="nextStep(4)">Next &rarr;</button>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step" id="step4">
+            <h2>Look & Feel</h2>
+            <p>Choose the visual tone for your web page.</p>
+            <div class="form-group">
+                <label>Preferred Aesthetic</label>
+                <select id="preferred_style">
+                    <option value="Cyberpunk Dark Minimalist">Cyberpunk Dark Minimalist</option>
+                    <option value="Clean Apple-style Light Mode">Clean Apple-Style Light Mode</option>
+                    <option value="Glassmorphism Modern Neon">Glassmorphism Modern Neon</option>
+                    <option value="Corporate Professional Blue">Corporate Professional</option>
+                </select>
+            </div>
+            <div class="btn-group">
+                <button type="button" class="secondary" onclick="prevStep(3)">&larr; Back</button>
+                <button type="button" id="generateBtn" onclick="generatePortfolio()">Generate & Download</button>
+            </div>
+            <div class="loader" id="loader">✨ AI is drafting your HTML file... Please wait.</div>
+        </div>
+    </form>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
