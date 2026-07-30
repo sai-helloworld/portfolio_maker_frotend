@@ -13,86 +13,358 @@
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
             --border-color: #334155;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            margin: 0;
             font-family: 'Inter', system-ui, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            padding: 2rem 0;
+            padding: 2rem 1rem;
         }
 
         .container {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            width: 100%;
-            max-width: 750px;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        h2 { margin-top: 0; font-size: 1.5rem; }
-        p { color: var(--text-sub); font-size: 0.95rem; }
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
 
-        .step { display: none; }
-        .step.active { display: block; }
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--accent), #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-        .form-group { margin-bottom: 1.25rem; }
-        label { display: block; margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600; }
-        
-        input, textarea, select {
+        .header p {
+            color: var(--text-sub);
+            margin-top: 0.5rem;
+        }
+
+        /* Auth Container */
+        .auth-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .auth-tab {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-sub);
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .auth-tab.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .auth-tab:hover:not(.active) {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-sub);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 0.75rem;
-            background: #0f172a;
+            background: var(--bg-color);
             border: 1px solid var(--border-color);
             border-radius: 6px;
             color: white;
-            box-sizing: border-box;
             font-size: 0.95rem;
+            transition: border-color 0.2s;
         }
 
-        input:focus, textarea:focus, select:focus {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: var(--accent);
         }
 
-        .btn-group {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 2rem;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
         }
 
-        button {
+        .btn {
             padding: 0.75rem 1.5rem;
             border: none;
             border-radius: 6px;
-            background-color: var(--accent);
-            color: white;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            font-size: 0.95rem;
         }
 
-        button:hover { background-color: var(--accent-hover); }
-        button:disabled { background-color: #475569; cursor: not-allowed; }
-        button.secondary { background-color: transparent; border: 1px solid var(--border-color); color: var(--text-sub); }
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
 
-        .loader {
-            display: none;
-            text-align: center;
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-sub);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #16a34a;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+        /* OTP Section */
+        .otp-section {
             margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg-color);
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .otp-section.show {
+            display: block;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .alert-info {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid var(--accent);
             color: var(--accent);
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .profile-section.show {
+            display: block;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .profile-info h3 {
+            font-size: 1.25rem;
+        }
+
+        .profile-info p {
+            color: var(--text-sub);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 600;
+            background: var(--accent);
+            color: white;
+        }
+
+        .badge-success {
+            background: var(--success);
+        }
+
+        /* Main App */
+        .app-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            display: none;
+        }
+
+        .app-container.show {
+            display: block;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .step-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .step-dot {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--text-sub);
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .step-dot.completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-subtitle {
+            color: var(--text-sub);
+            margin-bottom: 1.5rem;
         }
 
         .dynamic-item {
-            background: #0f172a;
+            background: var(--bg-color);
             padding: 1rem;
             border: 1px solid var(--border-color);
             border-radius: 6px;
@@ -107,142 +379,342 @@
             background: white;
             margin-top: 1rem;
         }
+
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .loader.show {
+            display: block;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Google Button */
+        .btn-google {
+            background: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-google:hover {
+            background: #f5f5f5;
+        }
+
+        .btn-google img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .container {
+                padding: 0;
+            }
+
+            .auth-container,
+            .app-container {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Logout button */
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Step 1: Design Aesthetics (Phase 1) -->
-    <div class="step active" id="step1">
-        <h2>Phase 1: Choose Design Aesthetics</h2>
-        <p>Specify visual preferences for the AI template generator (No personal data sent).</p>
+    <!-- Header -->
+    <div class="header">
+        <h1>🚀 AI Portfolio Generator</h1>
+        <p>Generate stunning portfolios with AI-powered design</p>
+    </div>
 
-        <div class="form-group">
-            <label>Design Style</label>
-            <select id="style_select">
-                <option value="Glassmorphism Modern Dark">Glassmorphism Modern Dark</option>
-                <option value="Minimalist Clean Light">Minimalist Clean Light</option>
-                <option value="Cyberpunk Neon">Cyberpunk Neon</option>
-                <option value="Apple-style Sleek">Apple-Style Sleek</option>
-                <option value="Neumorphism Dark">Neumorphism Dark</option>
-                <option value="Brutalist Tech">Brutalist Tech</option>
-            </select>
+    <!-- Auth Section -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login" onclick="switchAuthTab('login')">Login</button>
+            <button class="auth-tab" data-tab="register" onclick="switchAuthTab('register')">Register</button>
         </div>
 
-        <div class="form-group">
-            <label>Color Palette</label>
-            <input type="text" id="palette_input" value="Slate dark background with glowing cyan and indigo accents">
+        <!-- Alert Messages -->
+        <div class="alert" id="authAlert"></div>
+
+        <!-- Login Form -->
+        <div class="auth-form active" id="loginForm">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <div style="text-align:center;margin:1rem 0;color:var(--text-sub);">or</div>
+                <button type="button" class="btn btn-google btn-block" onclick="handleGoogleLogin()">
+                    <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                    Continue with Google
+                </button>
+            </form>
         </div>
 
-        <div class="form-group">
-            <label>Typography</label>
-            <select id="font_select">
-                <option value="Inter, sans-serif">Inter (Modern & Clean)</option>
-                <option value="Roboto Mono, monospace">Roboto Mono (Developer Vibe)</option>
-                <option value="Poppins, sans-serif">Poppins (Friendly & Bold)</option>
-            </select>
+        <!-- Register Form -->
+        <div class="auth-form" id="registerForm">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="regFirstName" placeholder="John">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="regLastName" placeholder="Doe">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="regUsername" placeholder="johndoe" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="your@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" placeholder="Min 8 characters" required minlength="8">
+                </div>
+                <div class="form-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" placeholder="Confirm password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+            </form>
         </div>
 
-        <div class="form-group">
-            <label>Animations Level</label>
-            <select id="animation_select">
-                <option value="Subtle CSS transitions and smooth hover scaling">Subtle Smooth Transitions</option>
-                <option value="Keyframe glow pulse effects and floating cards">Interactive Glow & Pulse</option>
-                <option value="Minimal static transitions">Minimal Static</option>
-            </select>
-        </div>
-
-        <div class="btn-group">
-            <div></div>
-            <button type="button" onclick="generateAITemplate()">Generate Design Template &rarr;</button>
+        <!-- OTP Verification -->
+        <div class="otp-section" id="otpSection">
+            <h4>📧 Verify Your Email</h4>
+            <p style="color:var(--text-sub);font-size:0.9rem;">We've sent a 6-digit OTP to your email.</p>
+            <form onsubmit="handleVerifyOTP(event)">
+                <div class="form-group">
+                    <label>Enter OTP</label>
+                    <input type="text" id="otpInput" placeholder="123456" maxlength="6" required>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Verify OTP</button>
+                    <button type="button" class="btn btn-secondary" onclick="handleResendOTP()">Resend OTP</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Step 2: Personal Details & Skills (Phase 2) -->
-    <div class="step" id="step2">
-        <h2>Phase 2: Portfolio Details</h2>
-        <p>Enter your profile details. This information stays private and is merged locally.</p>
-
-        <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" id="field_name" placeholder="John Doe">
-        </div>
-
-        <div class="form-group">
-            <label>Professional Title</label>
-            <input type="text" id="field_title" placeholder="Full Stack AI Engineer">
-        </div>
-
-        <div class="form-group">
-            <label>Tagline</label>
-            <input type="text" id="field_tagline" placeholder="Building scalable intelligent systems and agentic workflows.">
-        </div>
-
-        <div class="form-group">
-            <label>About Me</label>
-            <textarea id="field_about" rows="3" placeholder="Passionate developer with experience in python, cloud infrastructure..."></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>Technologies / Skills (Comma-separated)</label>
-            <input type="text" id="field_skills" placeholder="Python, Django, React, Docker, PostgreSQL, PyTorch">
-        </div>
-
-        <div class="btn-group">
-            <button type="button" class="secondary" onclick="navigateToStep(1)">&larr; Back to Design</button>
-            <button type="button" onclick="navigateToStep(3)">Next: Experience & Projects &rarr;</button>
-        </div>
-    </div>
-
-    <!-- Step 3: Projects, Experience & Contact (Phase 2 Continued) -->
-    <div class="step" id="step3">
-        <h2>Phase 2: Projects, Experience & Contact</h2>
-
-        <div class="form-group">
-            <label>Email & Contact</label>
-            <input type="text" id="field_email" placeholder="john@example.com">
-        </div>
-
-        <div class="form-group">
-            <label>GitHub Profile Link</label>
-            <input type="text" id="field_github" placeholder="https://github.com/username">
-        </div>
-
-        <div class="form-group">
-            <label>LinkedIn Profile Link</label>
-            <input type="text" id="field_linkedin" placeholder="https://linkedin.com/in/username">
-        </div>
-
-        <h3>Projects</h3>
-        <div id="projects_container">
-            <div class="dynamic-item project-item">
-                <input type="text" class="proj_title" placeholder="Project Title (e.g. Portfolio Builder)" style="margin-bottom:0.5rem;">
-                <textarea class="proj_desc" rows="2" placeholder="Project Description" style="margin-bottom:0.5rem;"></textarea>
-                <input type="text" class="proj_link" placeholder="Project Link (GitHub/Live URL)">
+    <!-- Profile Section -->
+    <div class="profile-section" id="profileSection">
+        <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar">JD</div>
+            <div class="profile-info">
+                <h3 id="profileName">John Doe</h3>
+                <p id="profileEmail">john@example.com</p>
+                <span class="badge" id="profileBadge">Verified</span>
             </div>
         </div>
-        <button type="button" class="secondary" onclick="addProjectField()" style="margin-bottom: 1.5rem;">+ Add Another Project</button>
-
-        <div class="btn-group">
-            <button type="button" class="secondary" onclick="navigateToStep(2)">&larr; Back</button>
-            <button type="button" onclick="renderFinalPortfolio()">Render Portfolio Website &rarr;</button>
-        </div>
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
     </div>
 
-    <!-- Step 4: Preview & Download (Phase 3 Output) -->
-    <div class="step" id="step4">
-        <h2>Phase 3: Live Preview & Download</h2>
-        <p>Your portfolio has been compiled locally by Python!</p>
+    <!-- Main App -->
+    <div class="app-container" id="appContainer">
+        <!-- Step Indicators -->
+        <div class="step-indicators">
+            <div class="step-dot active" id="dot1">1</div>
+            <div class="step-dot" id="dot2">2</div>
+            <div class="step-dot" id="dot3">3</div>
+            <div class="step-dot" id="dot4">4</div>
+        </div>
 
-        <iframe id="preview_iframe"></iframe>
+        <!-- Step 1 -->
+        <div class="step active" id="step1">
+            <h2 class="step-title">🎨 Design Aesthetics</h2>
+            <p class="step-subtitle">Choose your portfolio's visual style</p>
 
-        <div class="btn-group">
-            <button type="button" class="secondary" onclick="navigateToStep(3)">&larr; Edit Details</button>
-            <button type="button" onclick="downloadPortfolio()">Download index.html File</button>
+            <div class="form-group">
+                <label>Design Style</label>
+                <select id="style_select">
+                    <option value="Glassmorphism Modern Dark">Glassmorphism Modern Dark</option>
+                    <option value="Minimalist Clean Light">Minimalist Clean Light</option>
+                    <option value="Cyberpunk Neon">Cyberpunk Neon</option>
+                    <option value="Apple-style Sleek">Apple-Style Sleek</option>
+                    <option value="Neumorphism Dark">Neumorphism Dark</option>
+                    <option value="Brutalist Tech">Brutalist Tech</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Color Palette</label>
+                <input type="text" id="palette_input" value="Slate dark background with glowing cyan and indigo accents">
+            </div>
+
+            <div class="form-group">
+                <label>Typography</label>
+                <select id="font_select">
+                    <option value="Inter, sans-serif">Inter (Modern & Clean)</option>
+                    <option value="Roboto Mono, monospace">Roboto Mono (Developer Vibe)</option>
+                    <option value="Poppins, sans-serif">Poppins (Friendly & Bold)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Animations Level</label>
+                <select id="animation_select">
+                    <option value="Subtle CSS transitions and smooth hover scaling">Subtle Smooth Transitions</option>
+                    <option value="Keyframe glow pulse effects and floating cards">Interactive Glow & Pulse</option>
+                    <option value="Minimal static transitions">Minimal Static</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary btn-block" onclick="generateAITemplate()">Generate Design Template →</button>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="step2">
+            <h2 class="step-title">👤 Personal Details</h2>
+            <p class="step-subtitle">Tell us about yourself</p>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="field_name" placeholder="John Doe">
+            </div>
+
+            <div class="form-group">
+                <label>Professional Title</label>
+                <input type="text" id="field_title" placeholder="Full Stack AI Engineer">
+            </div>
+
+            <div class="form-group">
+                <label>Tagline</label>
+                <input type="text" id="field_tagline" placeholder="Building scalable intelligent systems">
+            </div>
+
+            <div class="form-group">
+                <label>About Me</label>
+                <textarea id="field_about" rows="3" placeholder="Passionate developer with experience in Python, cloud infrastructure..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Skills (Comma-separated)</label>
+                <input type="text" id="field_skills" placeholder="Python, Django, React, Docker, PostgreSQL">
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="navigateToStep(1)">← Back</button>
+                <button class="btn btn-primary" onclick="navigateToStep(3)">Next →</button>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" id="step3">
+            <h2 class="step-title">📁 Projects & Contact</h2>
+            <p class="step-subtitle">Showcase your work</p>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="field_email" placeholder="john@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>GitHub</label>
+                <input type="text" id="field_github" placeholder="https://github.com/username">
+            </div>
+
+            <div class="form-group">
+                <label>LinkedIn</label>
+                <input type="text" id="field_linkedin" placeholder="https://linkedin.com/in/username">
+            </div>
+
+            <h3>Projects</h3>
+            <div id="projects_container">
+                <div class="dynamic-item project-item">
+                    <input type="text" class="proj_title" placeholder="Project Title" style="margin-bottom:0.5rem;">
+                    <textarea class="proj_desc" rows="2" placeholder="Project Description" style="margin-bottom:0.5rem;"></textarea>
+                    <input type="text" class="proj_link" placeholder="Project Link (GitHub/Live URL)">
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="addProjectField()">+ Add Project</button>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="navigateToStep(2)">← Back</button>
+                <button class="btn btn-success" onclick="renderFinalPortfolio()">Render Portfolio →</button>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step" id="step4">
+            <h2 class="step-title">🎉 Your Portfolio</h2>
+            <p class="step-subtitle">Preview and download</p>
+
+            <iframe id="preview_iframe"></iframe>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="navigateToStep(3)">← Edit</button>
+                <button class="btn btn-success" onclick="downloadPortfolio()">⬇ Download HTML</button>
+            </div>
+        </div>
+
+        <div class="loader" id="loader">
+            <span class="spinner"></span>
+            <span id="loaderText">Processing...</span>
         </div>
     </div>
-
-    <div class="loader" id="loader">⚡ Processing... Please wait.</div>
 </div>
 
 <script src="script.js"></script>
