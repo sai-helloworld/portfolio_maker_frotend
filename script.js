@@ -1,4 +1,8 @@
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
+// ============ CONFIGURATION ============
+// Replaced local loopback URL with your live Ngrok HTTPS tunnel
+const BASE_NGROK_URL = 'https://guide-lark-flannels.ngrok-free.dev';
+const API_BASE_URL = `${BASE_NGROK_URL}/api`;
+
 let currentStep = 1;
 let generatedTemplateHtml = "";
 let currentRenderedHtml = "";
@@ -7,6 +11,12 @@ let authTokens = {
     refresh: null
 };
 let currentUser = null;
+
+// Standard headers required for cross-origin requests through Ngrok
+const defaultHeaders = {
+    'Content-Type': 'application/json',
+    'ngrok-skip-browser-warning': '69420' // Bypasses Ngrok landing warning page
+};
 
 // ============ AUTHENTICATION ============
 
@@ -66,7 +76,7 @@ async function handleRegister(event) {
     try {
         const response = await fetch(`${API_BASE_URL}/signup/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: defaultHeaders,
             body: JSON.stringify(data)
         });
 
@@ -75,7 +85,6 @@ async function handleRegister(event) {
         if (result.success) {
             showAlert('Registration successful! Please check your email for OTP.', 'success');
             document.getElementById('otpSection').classList.add('show');
-            // Store email for OTP verification
             document.getElementById('otpSection').dataset.email = data.email;
         } else {
             const errors = Object.values(result.errors || {}).flat().join(' ');
@@ -104,7 +113,7 @@ async function handleLogin(event) {
     try {
         const response = await fetch(`${API_BASE_URL}/login/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: defaultHeaders,
             body: JSON.stringify(data)
         });
 
@@ -148,7 +157,7 @@ async function handleVerifyOTP(event) {
     try {
         const response = await fetch(`${API_BASE_URL}/verify-otp/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: defaultHeaders,
             body: JSON.stringify({ email, otp })
         });
 
@@ -185,7 +194,7 @@ async function handleResendOTP() {
     try {
         const response = await fetch(`${API_BASE_URL}/resend-otp/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: defaultHeaders,
             body: JSON.stringify({ email })
         });
 
@@ -210,12 +219,7 @@ async function handleGoogleLogin() {
     showLoader('Connecting to Google...');
 
     try {
-        // Initialize Google Sign-In
-        // You need to replace with your actual Google Client ID
         const clientId = 'YOUR_GOOGLE_CLIENT_ID';
-        
-        // For demo purposes, we'll simulate Google login
-        // In production, use Google's official library
         const googleToken = prompt('Enter Google ID Token (for testing):');
         
         if (!googleToken) {
@@ -225,7 +229,7 @@ async function handleGoogleLogin() {
 
         const response = await fetch(`${API_BASE_URL}/google-auth/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: defaultHeaders,
             body: JSON.stringify({ token: googleToken })
         });
 
@@ -262,7 +266,7 @@ async function handleLogout() {
         const response = await fetch(`${API_BASE_URL}/logout/`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                ...defaultHeaders,
                 'Authorization': `Bearer ${authTokens.access}`
             },
             body: JSON.stringify({ refresh_token: authTokens.refresh })
@@ -289,7 +293,6 @@ function logoutUI() {
     document.getElementById('appContainer').classList.remove('show');
     document.getElementById('authContainer').style.display = 'block';
     
-    // Reset to step 1
     navigateToStep(1);
 }
 
@@ -299,7 +302,6 @@ function showApp() {
     document.getElementById('profileSection').classList.add('show');
     document.getElementById('appContainer').classList.add('show');
     
-    // Update profile
     if (currentUser) {
         document.getElementById('profileAvatar').textContent = 
             (currentUser.first_name?.[0] || '') + (currentUser.last_name?.[0] || '');
@@ -319,7 +321,6 @@ function navigateToStep(step) {
     document.getElementById(`step${currentStep}`).classList.remove('active');
     document.getElementById(`step${step}`).classList.add('active');
     
-    // Update dots
     for (let i = 1; i <= 4; i++) {
         const dot = document.getElementById(`dot${i}`);
         dot.classList.remove('active', 'completed');
@@ -358,7 +359,6 @@ function getProjectsFromForm() {
 
 // ---------- Generate Template ----------
 async function generateAITemplate() {
-    // Check if authenticated
     if (!authTokens.access) {
         showAlert('Please login first!', 'error');
         return;
@@ -377,7 +377,7 @@ async function generateAITemplate() {
         const response = await fetch(`${API_BASE_URL}/generate-template/`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                ...defaultHeaders,
                 'Authorization': `Bearer ${authTokens.access}`
             },
             body: JSON.stringify(designPayload)
@@ -392,7 +392,6 @@ async function generateAITemplate() {
         } else {
             showAlert(data.error || 'Failed to generate template.', 'error');
             if (response.status === 401) {
-                // Token expired, logout
                 logoutUI();
             }
         }
@@ -436,7 +435,7 @@ async function renderFinalPortfolio() {
         const response = await fetch(`${API_BASE_URL}/render-portfolio/`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                ...defaultHeaders,
                 'Authorization': `Bearer ${authTokens.access}`
             },
             body: JSON.stringify({
@@ -483,27 +482,22 @@ function downloadPortfolio() {
 
 // ============ INIT ============
 
-// Check if user is already logged in (check localStorage)
 function checkSession() {
     const savedTokens = localStorage.getItem('portfolio_tokens');
     if (savedTokens) {
         try {
             const tokens = JSON.parse(savedTokens);
             authTokens = tokens;
-            // Auto-login would go here
-            // For security, better to re-authenticate
         } catch (e) {
             localStorage.removeItem('portfolio_tokens');
         }
     }
 }
 
-// Save tokens on login
 function saveTokens() {
     localStorage.setItem('portfolio_tokens', JSON.stringify(authTokens));
 }
 
-// Override showApp to save tokens
 const originalShowApp = showApp;
 showApp = function() {
     if (authTokens.access) {
@@ -512,12 +506,10 @@ showApp = function() {
     originalShowApp();
 };
 
-// Override logoutUI to clear tokens
 const originalLogoutUI = logoutUI;
 logoutUI = function() {
     localStorage.removeItem('portfolio_tokens');
     originalLogoutUI();
 };
 
-// Initialize
 checkSession();
