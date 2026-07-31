@@ -513,3 +513,58 @@ logoutUI = function() {
 };
 
 checkSession();
+
+
+
+const CLIENT_ID = "608144473264-j69v4lst02gks2v2ua9c9l4vr9e9m6d7.apps.googleusercontent.com";
+
+function initGoogleSignIn() {
+    if (typeof google === 'undefined' || !google.accounts) {
+        // GSI script hasn't loaded yet — try again shortly
+        setTimeout(initGoogleSignIn, 100);
+        return;
+    }
+
+    google.accounts.id.initialize({
+        client_id: CLIENT_ID,
+        callback: handleGoogleResponse
+    });
+
+    ['googleLoginBtn', 'googleRegisterBtn'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) {
+            btn.addEventListener('click', () => google.accounts.id.prompt());
+        }
+    });
+}
+
+window.addEventListener('load', initGoogleSignIn);
+
+async function handleGoogleResponse(response) {
+    showLoader('Signing in with Google...');
+    try {
+        const res = await fetch(`${API_BASE_URL}/google-auth/`, {
+            method: 'POST',
+            headers: defaultHeaders,
+            body: JSON.stringify({ token: response.credential })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            authTokens.access = data.access_token || data.data?.access_token;
+            authTokens.refresh = data.refresh_token || data.data?.refresh_token;
+            currentUser = data.user || data.data?.user;
+
+            showAlert('Google login successful!', 'success');
+            setTimeout(() => showApp(), 500);
+        } else {
+            showAlert(data.errors || data.message || 'Google authentication failed.', 'error');
+        }
+    } catch (error) {
+        console.error(error);
+        showAlert('Could not connect to server.', 'error');
+    } finally {
+        hideLoader();
+    }
+}
